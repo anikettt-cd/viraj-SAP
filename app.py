@@ -60,37 +60,22 @@ def parse_material_description(desc):
         "extracted_size": size
     }
 
-# Updated to support Apple native file formatting structures along with Excel standards
-ALLOWED_EXTENSIONS = {'xlsx', 'xls', 'numbers'}
+# Excel standards only
+ALLOWED_EXTENSIONS = {'xlsx', 'xls'}
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def process_multiple_files(file_paths, query=None):
-    """Loads multiple Excel/Numbers files, runs the smart parser, and combines them cleanly"""
+    """Loads multiple Excel files, runs the smart parser, and combines them cleanly"""
     combined_frames = []
     
     for path in file_paths:
         if not os.path.exists(path):
             continue
         try:
-            # Check for Apple Numbers format framework
-            if path.endswith('.numbers'):
-                from numbers_parser import Document
-                doc = Document(path)
-                sheets = doc.sheets()
-                tables = sheets[0].tables()
-                data = tables[0].rows(as_list=True)
-                
-                # Turn list architecture into string-mapped DataFrame
-                if data and len(data) > 1:
-                    df = pd.DataFrame(data[1:], columns=data[0]).astype(str)
-                else:
-                    df = pd.DataFrame()
-            else:
-                # Load standard excel sheets as strict searchable text strings
-                df = pd.read_excel(path, dtype=str)
-                
+            # Force Excel spreadsheets to load as searchable text strings
+            df = pd.read_excel(path, dtype=str)
             if df.empty:
                 continue
                 
@@ -126,19 +111,13 @@ def process_multiple_files(file_paths, query=None):
     
     # ⚡ SMART TOKENIZED SEARCH ALGORITHM ⚡
     if query:
-        # Break input query into individual space-separated words (tokens)
         tokens = query.split()
-        
-        # Start with a mask where all rows are checked as matching True
         final_mask = pd.Series(True, index=master_df.index)
         
-        # For every single word, verify it exists anywhere inside the row values
         for token in tokens:
             token_mask = master_df.astype(str).apply(
                 lambda x: x.str.contains(re.escape(token), case=False)
             ).any(axis=1)
-            
-            # Chain the conditions together (Logical AND operation)
             final_mask = final_mask & token_mask
             
         master_df = master_df[final_mask]
