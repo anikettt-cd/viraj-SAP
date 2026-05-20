@@ -1,5 +1,4 @@
 Flask==3.0.3
 pandas==2.2.2
 openpyxl==3.1.2
-numbers-parser==4.3.3
 gunicorn==22.0.0
