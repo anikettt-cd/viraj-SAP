@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In | Viraj Profiles Limited</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-slate-850 to-zinc-900 flex items-center justify-center min-h-screen relative overflow-hidden px-4">
+    
+    <div class="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-30"></div>
+
+    <div class="bg-zinc-900/90 backdrop-blur-xl p-8 rounded-2xl border border-slate-700/50 shadow-2xl w-full max-w-md relative z-10">
+        
+        <div class="flex flex-col items-center mb-8">
+            <div class="h-16 w-auto flex items-center justify-center mb-3">
+                <img src="{{ url_for('static', filename='viraj-logo.png') }}" alt="Viraj Profiles Logo" class="h-14 object-contain">
+            </div>
+            <h2 class="text-xl font-bold tracking-tight text-white uppercase tracking-wider">Data Analytics Portal</h2>
+            <p class="text-xs text-amber-500 font-semibold uppercase tracking-widest mt-1">Manufacturing & Logistics</p>
+        </div>
+
+        <form action="/login" method="POST" class="space-y-5">
+            <div>
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Corporate Username</label>
+                <input type="text" name="username" required autocomplete="off" placeholder="Enter registration ID" 
+                    class="w-full bg-zinc-950 border border-slate-700 text-white placeholder-slate-600 rounded-xl p-3 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Password</label>
+                <input type="password" name="password" required placeholder="••••••••" 
+                    class="w-full bg-zinc-950 border border-slate-700 text-white placeholder-slate-600 rounded-xl p-3 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all">
+            </div>
+            <button type="submit" 
+                class="w-full bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 text-white border border-slate-600 py-3 rounded-xl font-semibold text-sm uppercase tracking-wider shadow-lg transition-all duration-200 transform active:scale-[0.98]">
+                Authorize Session
+            </button>
+        </form>
+
+        <div class="mt-6 border-t border-slate-800 pt-4 text-center">
+            <p class="text-sm text-slate-400">Request access credential? <a href="/signup" class="text-amber-500 hover:text-amber-400 font-medium transition-colors">Register Profile</a></p>
+        </div>
+    </div>
+</body>
+</html>
