@@ -1,4 +1,4 @@
-Flask==3.0.3
-pandas==2.2.2
-openpyxl==3.1.2
-gunicorn==22.0.0
+Flask
+pandas
+openpyxl
+gunicorn
