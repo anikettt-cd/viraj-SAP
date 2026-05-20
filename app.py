@@ -20,7 +20,7 @@ def init_db():
             username TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL
         )
-    ''')
+    '' stream''')
     conn.commit()
     conn.close()
 
@@ -67,7 +67,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def process_multiple_files(file_paths, query=None):
-    """Loads multiple Excel files, runs the smart parser, and combines them cleanly"""
+    """Loads multiple Excel files, runs the smart parser, tracks native rows, and combines them"""
     combined_frames = []
     
     for path in file_paths:
@@ -89,8 +89,13 @@ def process_multiple_files(file_paths, query=None):
                     break
                     
             parsed_data = []
-            for _, row in df.iterrows():
+            # Enumerate lets us track the natural Excel row index (starting at row 2 for data)
+            for current_idx, (_, row) in enumerate(df.iterrows(), start=2):
                 row_dict = row.to_dict()
+                
+                # Assign the original Excel row position directly to the record
+                row_dict["Excel Row No."] = str(current_idx)
+                
                 if target_col and row_dict.get(target_col):
                     specs = parse_material_description(row_dict[target_col])
                 else:
@@ -108,6 +113,11 @@ def process_multiple_files(file_paths, query=None):
     # Combine all spreadsheets together into one master matrix
     master_df = pd.concat(combined_frames, ignore_index=True, sort=False)
     master_df = master_df.fillna('')
+    
+    # Move the row tracker to the very front of the dataframe columns list layout
+    if "Excel Row No." in master_df.columns:
+        cols = ["Excel Row No."] + [c for c in master_df.columns if c != "Excel Row No."]
+        master_df = master_df[cols]
     
     # ⚡ SMART TOKENIZED SEARCH ALGORITHM ⚡
     if query:
