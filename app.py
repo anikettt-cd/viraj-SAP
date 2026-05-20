@@ -20,7 +20,7 @@ def init_db():
             username TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL
         )
-    '' stream''')
+    ''')
     conn.commit()
     conn.close()
 
@@ -89,7 +89,7 @@ def process_multiple_files(file_paths, query=None):
                     break
                     
             parsed_data = []
-            # Enumerate lets us track the natural Excel row index (starting at row 2 for data)
+            # Enumerate lets us track the natural Excel row index (starting at row 2 for data rows)
             for current_idx, (_, row) in enumerate(df.iterrows(), start=2):
                 row_dict = row.to_dict()
                 
